@@ -86,8 +86,12 @@ function Login(){
             .then(user =>{
                 if(user.userName != null)
                 {
-                    alert(user.userName);
-                    history.push("/Bills");
+                    history.push({
+                        pathname: '/Bills',
+                        search: '?query=abc',
+                        state: { user: user }
+                      })
+                    //history.push("/Bills",user);
                 }
             })}
     return (
