@@ -70,11 +70,11 @@ function Bills() {
     const handleSubmit = () => {
      let model = {
         "GoldPrice": parseFloat(goldPrice.goldPrice !== "" ? goldPrice.goldPrice : 0.0 ),
-        "Discount": parseFloat(discount.discount !== "" ? discount.discount : 0.0 ),
+        "Discount": parseFloat(discount.discount=== undefined ? 2 :  discount.discount !== "" ? discount.discount : 0.0 ),
         "Weight":  parseFloat(weight.weight !== "" ? weight.weight : 0.0 ),
         "TotalPrice": 0
     }
-       let url = `https://localhost:44306/api/bills/GetBill/`
+       let url = `https://localhost:5001/api/bills/GetBill/`
        return fetch(url,{
         method: 'POST',
         headers: {
@@ -106,7 +106,7 @@ function Bills() {
             </div>
             <div className="row">
               <div className="col-4"><label style={labelStyle} >discount: </label></div>
-              <div className="col"><input type="text" style={inputStyle} onChange={(e)=> discountHandler(e)} disabled={location.state.user.userType === "Regular"} value={discount}/></div>
+              <div className="col"><input type="text" style={inputStyle} onChange={(e)=> discountHandler(e)} disabled={location.state.user.userType === "Regular"} value={discount.discount=== undefined ? 2 :  discount.discount !== "" ? discount.discount : "" }/></div>
             </div>
             <div className="row">
               <div className="col-4"><label style={labelStyle} >Total Price: </label></div>

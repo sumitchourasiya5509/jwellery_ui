@@ -90,7 +90,7 @@ function Login(){
     const history = useHistory();
    console.log(history);
     const handleSubmit = data => {
-             return fetch(`https://localhost:44306/api/users/Login?userName=${data.username}&password=${data.password}`)
+             return fetch(`https://localhost:5001/api/users/Login?userName=${data.username}&password=${data.password}`)
             .then(response => response.json())
             .then(user =>{
                 if(user.userName != null)
