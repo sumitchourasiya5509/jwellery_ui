@@ -1,4 +1,5 @@
 import React from 'react'
+import {useState} from 'react'
 import { useLocation } from "react-router-dom";
 
 
@@ -44,62 +45,78 @@ const submitStyle = {
     display: 'block'
 };
 
-const Field = React.forwardRef(({label, type}, ref) => {
-    return (
-      <div className="row">
-          <div className="col-4"><label style={labelStyle} >{label}</label></div>
-          <div className="col"><input ref={ref} type={type} style={inputStyle} /></div>
-      </div>
-    );
-});
-
-const Form = ({onSubmit}) => {
-    const goldpriceRef = React.useRef();
-    const weightgramRef = React.useRef();
-    const totalpriceRef = React.useRef();
-    const discountRef = React.useRef();
-    const handleSubmit = e => {
-        e.preventDefault();
-        const data = {
-            GoldPrice: goldpriceRef.current.value,
-            Weight: weightgramRef.current.value,
-            Discount: discountRef.current.value,
-            TotalPrice:totalpriceRef.current.value
-        };
-        onSubmit(data);
-    };
-    return (
-      <form style={formStyle} onSubmit={handleSubmit} >
-         <Field ref={goldpriceRef} label="gold price (per Gram):" type="text" />
-        <Field ref={weightgramRef} label="weight(grams):" type="password" />
-        <Field ref={totalpriceRef} label="total price:" type="password" />
-        <Field ref={discountRef} label="discount:" type="password" />
-        <div className="row">
-            <div className="col"><button style={submitStyle} type="submit">Calculate</button></div>
-            <div className="col"> <button style={submitStyle} type="submit">Print Screen</button></div>
-            <div className="col"><button style={submitStyle} type="submit">Print to file</button></div>
-            <div className="col"><button style={submitStyle} type="submit">Print to Paper</button></div>
-        </div>
-      </form>
-    );
-};
 
 function Bills() {
     const location = useLocation();
     console.log(location)
+   
+    const [goldPrice, setgoldPrice] = useState("")
+    const [weight, setweight] = useState("")
+   const [discount, setdiscount] = useState(2)
+   const [totalprice, settotalprice] = useState(0)
 
-    const handleSubmit = data => {
-        return fetch(`https://localhost:44306/api/users/Login?userName=${data.username}&password=${data.password}`)
-       .then(response => response.json())
-       .then(user =>{
-          
+    function goldPriceHandler(e){
+        setgoldPrice({goldPrice : e.target.value})
+    }
+
+    function weightHandler(e){
+        setweight({weight : e.target.value})
+    }
+
+    function discountHandler(e){
+        setdiscount({discount : e.target.value})
+    }
+
+    const handleSubmit = () => {
+     //console.log(data)
+     let model = {
+        "GoldPrice": parseFloat(goldPrice.goldPrice !== "" ? goldPrice.goldPrice : 0.0 ),
+        "Discount": parseFloat(discount.discount !== "" ? discount.discount : 0.0 ),
+        "Weight":  parseFloat(weight.weight !== "" ? weight.weight : 0.0 ),
+        "TotalPrice": 0
+    }
+    console.log(model)
+       let url = `https://localhost:44306/api/bills/GetBill/`
+       return fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(model)
+        }).then(response => response.json())
+            .then(bill =>{
+                console.log(bill)
+               settotalprice(bill.totalPrice)
        })}
 
-    return (
-        <div style={appStyle}>
-        <Form onSubmit={handleSubmit} />
-      </div>
-    )
+       return (
+        <form style={formStyle} onSubmit={handleSubmit} >
+             <div className="row">
+              <div className="col-4"><label style={labelStyle} >gold price (per Gram): </label></div>
+              <div className="col"><input type="text" style={inputStyle} onChange={(e)=> goldPriceHandler(e)}/></div>
+            </div>
+            <div className="row">
+              <div className="col-4"><label style={labelStyle} >weight(grams): </label></div>
+              <div className="col"><input  type="text" style={inputStyle} onChange={(e)=> weightHandler(e)}/></div>
+            </div>
+            <div className="row">
+              <div className="col-4"><label style={labelStyle} >discount: </label></div>
+              <div className="col"><input type="text" style={inputStyle} onChange={(e)=> discountHandler(e)}/></div>
+            </div>
+            <div className="row">
+              <div className="col-4"><label style={labelStyle} >Total Price: </label></div>
+              <div className="col"><input type="text" style={inputStyle} value={totalprice}/></div>
+            </div>
+       
+          <div className="row">
+              <div className="col"><button style={submitStyle} type="button" onClick={handleSubmit}>Calculate</button></div>
+              <div className="col"> <button style={submitStyle} type="button">Print Screen</button></div>
+              <div className="col"><button style={submitStyle} type="button">Print to file</button></div>
+              <div className="col"><button style={submitStyle} type="button">Print to Paper</button></div>
+          </div>
+        </form>
+      );
 }
 
 export default Bills

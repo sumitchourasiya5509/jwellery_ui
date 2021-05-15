@@ -46,8 +46,7 @@ const submitStyle = {
 
 const Field = React.forwardRef(({label, type}, ref) => {
     return (
-      <div>
-          <div className="row">
+          <div>
               <div className="col-4">
               <label style={labelStyle} >{label}</label>
                </div>
@@ -55,8 +54,7 @@ const Field = React.forwardRef(({label, type}, ref) => {
               <input ref={ref} type={type} style={inputStyle} />
               </div>
           </div>
-        
-      </div>
+      
     );
 });
 
