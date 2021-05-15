@@ -51,7 +51,7 @@ const Field = React.forwardRef(({label, type}, ref) => {
               <label style={labelStyle} >{label}</label>
                </div>
               <div className="col">
-              <input ref={ref} type={type} style={inputStyle} />
+              <input ref={ref} type={type} style={inputStyle} required/>
               </div>
           </div>
       
