@@ -13,7 +13,7 @@ const formStyle = {
     border: '1px solid #c9c9c9',
     borderRadius: '5px',
     background: '#f5f5f5',
-    width: '220px',
+    width: '400px',
     display: 'block'
 };
 
@@ -47,8 +47,15 @@ const submitStyle = {
 const Field = React.forwardRef(({label, type}, ref) => {
     return (
       <div>
-        <label style={labelStyle} >{label}</label>
-        <input ref={ref} type={type} style={inputStyle} />
+          <div className="row">
+              <div className="col-4">
+              <label style={labelStyle} >{label}</label>
+               </div>
+              <div className="col">
+              <input ref={ref} type={type} style={inputStyle} />
+              </div>
+          </div>
+        
       </div>
     );
 });
@@ -66,10 +73,14 @@ const Form = ({onSubmit}) => {
     };
     return (
       <form style={formStyle} onSubmit={handleSubmit} >
+          
         <Field ref={usernameRef} label="Username:" type="text" />
         <Field ref={passwordRef} label="Password:" type="password" />
-        <div>
-          <button style={submitStyle} type="submit">Submit</button>
+        <div className="row">
+            <div className="col"></div>
+            <div className="col"> <button style={submitStyle} type="submit">Submit</button></div>
+            <div className="col"></div>
+         
         </div>
       </form>
     );
@@ -95,6 +106,7 @@ function Login(){
                 }
             })}
     return (
+        
       <div style={appStyle}>
         <Form onSubmit={handleSubmit} />
       </div>
